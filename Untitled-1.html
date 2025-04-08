@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Pokémon Acessível</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --bg: #f4f4f4;
+      --text: #111;
+      --header: #e53935;
+      --card: #fff;
+      --nav: #ffd600;
+      --footer: #d32f2f;
+    }
+
+    body.dark-mode {
+      --bg: #121212;
+      --text: #eee;
+      --header: #880e4f;
+      --card: #1e1e1e;
+      --nav: #ffb300;
+      --footer: #560027;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      transition: 0.3s;
+    }
+
+    header, nav, footer {
+      padding: 1em;
+      text-align: center;
+    }
+
+    header {
+      background: var(--header);
+      color: white;
+    }
+
+    nav {
+      background: var(--nav);
+    }
+
+    nav a {
+      margin: 0 10px;
+      text-decoration: none;
+      font-weight: bold;
+      color: black;
+    }
+
+    .toggle-btn {
+      background: black;
+      color: white;
+      padding: 10px;
+      margin-top: 10px;
+      border: none;
+      cursor: pointer;
+    }
+
+    main {
+      padding: 20px;
+      max-width: 960px;
+      margin: auto;
+    }
+
+    .pokemon {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 10px;
+      padding: 1em;
+      width: 200px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .card img {
+      width: 100%;
+      height: auto;
+    }
+
+    footer {
+      background: var(--footer);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Pokémon Acessível</h1>
+    <button class="toggle-btn" onclick="document.body.classList.toggle('dark-mode')">
+      Alternar Modo Escuro
+    </button>
+  </header>
+
+  <nav>
+    <a href="#inicio">Início</a>
+    <a href="#galeria">Galeria</a>
+  </nav>
+
+  <main>
+    <section id="inicio">
+      <h2>Bem-vindo!</h2>
+      <p>Este site é acessível, com contraste, zoom fluido e modo escuro.</p>
+    </section>
+
+    <section id="galeria">
+      <h2>Galeria de Pokémon</h2>
+      <div class="pokemon" id="pokemon-container">
+        Carregando...
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Pokémon Acessível. Imagens da <a href="https://pokeapi.co" style="color: #fff;" target="_blank">PokéAPI</a>.</p>
+  </footer>
+
+  <script>
+    async function carregarPokemon(ids) {
+      const container = document.getElementById('pokemon-container');
+      container.innerHTML = '';
+
+      for (const id of ids) {
+        const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+        const data = await res.json();
+        const nome = data.name.charAt(0).toUpperCase() + data.name.slice(1);
+        const tipos = data.types.map(t => t.type.name).join(', ');
+        const imagem = data.sprites.other['official-artwork'].front_default;
+
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <img src="${imagem}" alt="${nome}">
+          <h3>${nome}</h3>
+          <p>Tipo: ${tipos}</p>
+        `;
+        container.appendChild(card);
+      }
+    }
+
+    carregarPokemon([1, 4, 7, 25, 39, 52, 94, 133, 150, 151]);
+  </script>
+</body>
+</html>
